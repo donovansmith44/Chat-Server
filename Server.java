@@ -12,6 +12,9 @@ class Server {
         ArrayList<ClientHandler> ThreadList = new ArrayList<>();
         int portNumber = Integer.parseInt(args[0]);
         ServerSocket server = null;
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+        String clientName;
 
         try{
             
@@ -25,9 +28,15 @@ class Server {
                 System.out.println("Client accepted from IP: "
                     + client.getInetAddress()
                         .getHostAddress());
-                
+                reader = 
+                    new BufferedReader(new InputStreamReader(client.getInputStream()));
+                writer =
+                    new PrintWriter(client.getOutputStream(), true);
+                writer.println("What's your name?");
+                clientName = reader.readLine();
+
                 ClientHandler clientHandler =
-                    new ClientHandler(client, ThreadList);
+                    new ClientHandler(client, ThreadList, clientName);
                 
                 ThreadList.add(clientHandler);
                 
@@ -44,10 +53,12 @@ private static class ClientHandler extends Thread {
     private final Socket clientSocket;
     private ArrayList<ClientHandler> threadList;
     PrintWriter thisOutput;
+    String clientName;
 
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> ThreadList){
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> ThreadList, String name){
         this.clientSocket = socket;
         this.threadList = ThreadList;
+        this.clientName = name;
     }
     
     @Override
@@ -55,7 +66,6 @@ private static class ClientHandler extends Thread {
     {
         BufferedReader thisInput = null;
         try{
-
             thisOutput = new PrintWriter(clientSocket.getOutputStream(), true);
             thisInput = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             
@@ -66,8 +76,7 @@ private static class ClientHandler extends Thread {
                     break;
                 }
                 printToAllClients(line);
-                System.out.println("From client: "
-                    + line);
+                System.out.println(clientName + ": " + line);
             }
         }
         catch(Exception e) {
@@ -91,7 +100,7 @@ private static class ClientHandler extends Thread {
 
     private void printToAllClients(String outputLine){
         for(ClientHandler handler: threadList){
-            handler.thisOutput.println(outputLine);
+            handler.thisOutput.println(clientName + ": " + outputLine);
         }
     }
 }

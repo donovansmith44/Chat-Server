@@ -25,12 +25,13 @@ class Client{
             ClientThread clientThread = new ClientThread(socket);
             clientThread.start();
 
-            System.out.println("What's your name?");
-            clientName = userInputScanner.nextLine();
+            // System.out.println("What's your name?");
+            // clientName = userInputScanner.nextLine();
 
             while(!line.equalsIgnoreCase("exit")){
                 line = userInputScanner.nextLine();
-                clientOutputPrinter.println(clientName + ": " + line);
+                //clientOutputPrinter.println(clientName + ": " + line);
+                clientOutputPrinter.println(line);
             }
 
             clientInputReader.close();
