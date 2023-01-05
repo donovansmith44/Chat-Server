@@ -76,7 +76,7 @@ private static class ClientHandler extends Thread {
                     break;
                 }
                 printToAllClients(line);
-                System.out.println(clientName + ": " + line);
+                System.out.println("From client '" + clientName + "' : " + line);
             }
         }
         catch(Exception e) {
