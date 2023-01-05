@@ -25,13 +25,15 @@ class Server {
             while(true){
                 
                 Socket client = server.accept();
-                System.out.println("Client accepted from IP: "
-                    + client.getInetAddress()
-                        .getHostAddress());
                 reader = 
                     new BufferedReader(new InputStreamReader(client.getInputStream()));
                 writer =
                     new PrintWriter(client.getOutputStream(), true);
+
+                System.out.println("Client accepted from IP: "
+                    + client.getInetAddress()
+                        .getHostAddress());
+
                 writer.println("What's your name?");
                 clientName = reader.readLine();
 
@@ -66,8 +68,10 @@ private static class ClientHandler extends Thread {
     {
         BufferedReader thisInput = null;
         try{
-            thisOutput = new PrintWriter(clientSocket.getOutputStream(), true);
-            thisInput = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            thisOutput = 
+                new PrintWriter(clientSocket.getOutputStream(), true);
+            thisInput = 
+                new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             
             String line = "";
 
