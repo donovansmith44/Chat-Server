@@ -16,8 +16,7 @@ class Server {
         PrintWriter writer = null;
         String clientName;
 
-        try{
-            
+        try{ 
             server = new ServerSocket(portNumber);
             server.setReuseAddress(true);
 
@@ -44,8 +43,7 @@ class Server {
                 
                 clientHandler.start();
             }
-        }
-        catch(IOException i)
+        } catch(IOException i)
         {
             i.printStackTrace();
         }
@@ -57,15 +55,14 @@ private static class ClientHandler extends Thread {
     PrintWriter thisOutput;
     String clientName;
 
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> ThreadList, String name){
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> ThreadList, String name) {
         this.clientSocket = socket;
         this.threadList = ThreadList;
         this.clientName = name;
     }
     
     @Override
-    public void run()
-    {
+    public void run() {
         BufferedReader thisInput = null;
         try{
             thisOutput = 
@@ -75,18 +72,16 @@ private static class ClientHandler extends Thread {
             
             String line = "";
 
-            while((line = thisInput.readLine()) != null) { 
+            while ((line = thisInput.readLine()) != null) { 
                 if(line.equalsIgnoreCase("exit")){
                     break;
                 }
                 printToAllClients(line);
                 System.out.println("From client '" + clientName + "' : " + line);
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (thisOutput != null) {
                     thisOutput.close();
@@ -95,14 +90,13 @@ private static class ClientHandler extends Thread {
                     thisInput.close();
                     clientSocket.close();
                 }
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }        
         }
     }
 
-    private void printToAllClients(String outputLine){
+    private void printToAllClients(String outputLine) {
         for(ClientHandler handler: threadList){
             handler.thisOutput.println(clientName + ": " + outputLine);
         }
